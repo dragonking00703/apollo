@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+<title>Apollo TV</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;
+  --s1:#12121a;
+  --s2:#1a1a26;
+  --acc:#ff6b35;
+  --acc2:#ff9f1c;
+  --blue:#4facfe;
+  --text:#f0efe8;
+  --muted:#666677;
+  --border:#22222e;
+  --r:10px;
+}
+html,body{width:600px;height:600px;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
+#app{width:600px;height:600px;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:18px}
+.screen.active{display:flex}
+
+/* LOGIN */
+#login{align-items:center;justify-content:center;gap:14px;background:var(--bg)}
+.logo-wrap{text-align:center;margin-bottom:4px}
+.logo{font-size:32px;font-weight:700;letter-spacing:-2px}
+.logo .a{color:var(--acc)}
+.logo .b{color:var(--text)}
+.logo-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:3px;margin-top:4px}
+.field{width:100%;display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.field input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none}
+.field input:focus{border-color:var(--acc)}
+.btn{width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:var(--r);font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:1px}
+.btn:focus{outline:2px solid var(--acc2);outline-offset:2px}
+.err{color:#ff6b6b;font-size:12px;text-align:center;min-height:16px;font-family:'JetBrains Mono',monospace}
+.hint{font-size:11px;color:var(--muted);text-align:center;font-family:'JetBrains Mono',monospace}
+
+/* SHARED */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
+.topbar-title{font-size:16px;font-weight:700;color:var(--acc)}
+.back-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer}
+.back-btn:focus{outline:none;border-color:var(--acc);color:var(--acc)}
+.item-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:5px}
+.item-list::-webkit-scrollbar{width:2px}
+.item-list::-webkit-scrollbar-thumb{background:var(--border)}
+.item-row{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;text-align:left;width:100%}
+.item-row:focus{outline:none;border-color:var(--acc);background:var(--s2)}
+.item-thumb{width:42px;height:42px;border-radius:7px;background:var(--s2);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;overflow:hidden}
+.item-thumb img{width:100%;height:100%;object-fit:cover}
+.item-info{flex:1;min-width:0}
+.item-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-sub{font-size:11px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.badge{font-size:10px;padding:3px 7px;border-radius:5px;background:var(--s2);color:var(--muted);border:1px solid var(--border);flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.badge.live{background:#1a0a0a;color:var(--acc);border-color:#ff6b3544}
+
+/* HOME */
+#home{gap:0}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;flex-shrink:0}
+.cat-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px;cursor:pointer}
+.cat-card:focus{outline:none;border-color:var(--acc);background:var(--s2)}
+.cat-icon{font-size:20px}
+.cat-name{font-size:13px;font-weight:700}
+.cat-count{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.bottom-nav{display:flex;gap:6px;flex-shrink:0;margin-top:auto;padding-top:12px;border-top:1px solid var(--border)}
+.nav-btn{flex:1;padding:9px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer}
+.nav-btn:focus,.nav-btn.active{outline:none;border-color:var(--acc);color:var(--acc)}
+
+/* SEARCH */
+#search-screen{gap:0}
+.search-query{font-size:22px;font-weight:700;color:var(--acc);margin-bottom:10px;min-height:30px;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.alpha-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-bottom:10px;flex-shrink:0}
+.alpha-key{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:7px 0;text-align:center;font-size:12px;cursor:pointer;font-family:'JetBrains Mono',monospace}
+.alpha-key:focus{outline:none;border-color:var(--acc);color:var(--acc);background:var(--s2)}
+
+/* PLAYER */
+#player{gap:0;background:#000;padding:0}
+.player-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);position:absolute;top:0;left:0;right:0;z-index:10}
+.player-info{flex:1}
+.player-title{font-size:15px;font-weight:700}
+.player-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+#video-el{width:600px;height:600px;background:#000;object-fit:contain}
+.player-controls{position:absolute;bottom:0;left:0;right:0;padding:14px 18px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);display:flex;gap:8px;z-index:10}
+.ctrl-btn{flex:1;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;backdrop-filter:blur(4px)}
+.ctrl-btn:focus{outline:none;border-color:var(--acc)}
+
+.loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;gap:8px;font-family:'JetBrains Mono',monospace}
+.spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- LOGIN -->
+<div id="login" class="screen active">
+  <div class="logo-wrap">
+    <div class="logo"><span class="a">AP</span><span class="b">OLLO</span></div>
+    <div class="logo-sub">IPTV · GLASSES</div>
+  </div>
+  <div class="field">
+    <label>server url</label>
+    <input type="url" id="f-server" placeholder="http://con.me" tabindex="1" class="F">
+  </div>
+  <div class="field">
+    <label>username</label>
+    <input type="text" id="f-user" tabindex="2" class="F" autocomplete="username">
+  </div>
+  <div class="field">
+    <label>password</label>
+    <input type="password" id="f-pass" tabindex="3" class="F" autocomplete="current-password">
+  </div>
+  <div class="err" id="login-err"></div>
+  <button class="btn F" id="login-btn" tabindex="4">CONNECT</button>
+  <div class="hint">server · username · password from welcome email</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="topbar">
+    <div class="topbar-title">APOLLO</div>
+    <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="home-info"></div>
+  </div>
+  <div class="cat-grid" id="cat-grid"></div>
+  <div class="bottom-nav">
+    <button class="nav-btn F active" id="tab-home" tabindex="20">home</button>
+    <button class="nav-btn F" id="tab-search" tabindex="21">search</button>
+    <button class="nav-btn F" id="tab-logout" tabindex="22">logout</button>
+  </div>
+</div>
+
+<!-- BROWSE -->
+<div id="browse" class="screen">
+  <div class="topbar">
+    <button class="back-btn F" id="browse-back" tabindex="30">← back</button>
+    <div style="font-size:14px;font-weight:700" id="browse-title"></div>
+  </div>
+  <div class="item-list" id="item-list"></div>
+</div>
+
+<!-- SEARCH -->
+<div id="search-screen" class="screen">
+  <div class="topbar">
+    <button class="back-btn F" id="search-back" tabindex="40">← back</button>
+    <div style="font-size:14px;font-weight:700">SEARCH</div>
+  </div>
+  <div class="search-query" id="search-query">_</div>
+  <div class="alpha-grid" id="alpha-grid"></div>
+  <div class="item-list" id="search-results"></div>
+</div>
+
+<!-- PLAYER -->
+<div id="player" class="screen">
+  <div class="player-header">
+    <button class="back-btn F" id="player-back" tabindex="50" style="background:rgba(0,0,0,0.5)">← back</button>
+    <div class="player-info">
+      <div class="player-title" id="player-title"></div>
+      <div class="player-sub" id="player-sub"></div>
+    </div>
+  </div>
+  <video id="video-el" autoplay controls playsinline></video>
+  <div class="player-controls">
+    <button class="ctrl-btn F" id="ctrl-back" tabindex="51">⏮ restart</button>
+    <button class="ctrl-btn F" id="ctrl-play" tabindex="52">⏸ pause</button>
+    <button class="ctrl-btn F" id="ctrl-stop" tabindex="53">■ stop</button>
+  </div>
+</div>
+
+</div>
+<script>
+const S=id=>document.getElementById(id);
+let state={server:'',user:'',pass:'',categories:{},currentCat:null,allItems:[],searchQ:'',currentItem:null};
+
+// Focus management
+function getFocusables(c){return Array.from((c||document.querySelector('.screen.active')).querySelectorAll('.F'))}
+function moveFocus(d){
+  const f=getFocusables();if(!f.length)return;
+  const i=f.indexOf(document.activeElement);
+  const n=(d<0)?(i>0?i-1:f.length-1):(i<f.length-1?i+1:0);
+  f[n].focus();f[n].scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+document.addEventListener('keydown',e=>{
+  const t=document.activeElement.tagName;
+  if(t==='INPUT')return;
+  switch(e.key){
+    case'ArrowUp':case'ArrowLeft':moveFocus(-1);break;
+    case'ArrowDown':case'ArrowRight':moveFocus(1);break;
+    case'Enter':if(document.activeElement.classList.contains('F'))document.activeElement.click();break;
+    case'Escape':handleBack();break;
+    default:return;
+  }
+  e.preventDefault();
+});
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  S(id).classList.add('active');
+  const f=getFocusables(S(id));
+  if(f.length)f[0].focus();
+}
+
+function handleBack(){
+  const a=document.querySelector('.screen.active');
+  if(a.id==='browse')show('home');
+  else if(a.id==='search-screen')show('home');
+  else if(a.id==='player'){stopPlayer();show('browse');}
+}
+
+// LOGIN
+S('login-btn').addEventListener('click',async()=>{
+  const server=S('f-server').value.trim().replace(/\/$/,'');
+  const user=S('f-user').value.trim();
+  const pass=S('f-pass').value.trim();
+  if(!server||!user||!pass){S('login-err').textContent='fill all fields';return;}
+  S('login-btn').textContent='CONNECTING...';S('login-err').textContent='';
+  try{
+    const r=await fetch(`${server}/player_api.php?username=${user}&password=${pass}&action=get_live_categories`);
+    if(!r.ok)throw new Error('auth failed');
+    const cats=await r.json();
+    state.server=server;state.user=user;state.pass=pass;
+    localStorage.setItem('apollo_auth',JSON.stringify({server,user,pass}));
+    await loadHome(cats);
+  }catch(err){
+    S('login-err').textContent='connection failed — check credentials';
+    S('login-btn').textContent='CONNECT';
+  }
+});
+S('f-pass').addEventListener('keydown',e=>{if(e.key==='Enter')S('login-btn').click();});
+
+async function loadHome(liveCats){
+  S('home-info').textContent=state.user;
+  show('home');
+  const grid=S('cat-grid');
+  grid.innerHTML='';
+  const sections=[
+    {id:'live',name:'Live TV',icon:'📡',action:()=>loadLive(liveCats)},
+    {id:'vod',name:'Movies',icon:'🎬',action:()=>loadVOD()},
+    {id:'series',name:'TV Series',icon:'📺',action:()=>loadSeries()},
+    {id:'search',name:'Search',icon:'🔍',action:()=>openSearch()},
+  ];
+  sections.forEach((s,i)=>{
+    const c=document.createElement('button');
+    c.className='cat-card F';c.tabIndex=10+i;
+    c.innerHTML=`<div class="cat-icon">${s.icon}</div><div class="cat-name">${s.name}</div><div class="cat-count">tap to browse</div>`;
+    c.addEventListener('click',s.action);
+    grid.appendChild(c);
+  });
+}
+
+// LIVE TV
+async function loadLive(cats){
+  S('browse-title').textContent='LIVE TV';
+  show('browse');
+  const list=S('item-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div> loading channels...</div>';
+  try{
+    const r=await fetch(`${state.server}/player_api.php?username=${state.user}&password=${state.pass}&action=get_live_streams`);
+    const items=await r.json();
+    renderItems(items.slice(0,200),list,'live');
+  }catch(e){list.innerHTML='<div class="empty">error loading channels</div>';}
+}
+
+// VOD
+async function loadVOD(){
+  S('browse-title').textContent='MOVIES';
+  show('browse');
+  const list=S('item-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div> loading movies...</div>';
+  try{
+    const r=await fetch(`${state.server}/player_api.php?username=${state.user}&password=${state.pass}&action=get_vod_streams`);
+    const items=await r.json();
+    renderItems(items.slice(0,200),list,'vod');
+  }catch(e){list.innerHTML='<div class="empty">error loading movies</div>';}
+}
+
+// SERIES
+async function loadSeries(){
+  S('browse-title').textContent='TV SERIES';
+  show('browse');
+  const list=S('item-list');
+  list.innerHTML='<div class="loading"><div class="spinner"></div> loading series...</div>';
+  try{
+    const r=await fetch(`${state.server}/player_api.php?username=${state.user}&password=${state.pass}&action=get_series`);
+    const items=await r.json();
+    renderItems(items.slice(0,200),list,'series');
+  }catch(e){list.innerHTML='<div class="empty">error loading series</div>';}
+}
+
+function renderItems(items,list,type){
+  list.innerHTML='';
+  if(!items||!items.length){list.innerHTML='<div class="empty">nothing found</div>';return;}
+  state.allItems=items;
+  items.forEach((item,i)=>{
+    const row=document.createElement('button');
+    row.className='item-row F';row.tabIndex=100+i;
+    const name=item.name||item.title||'Unknown';
+    const thumb=document.createElement('div');
+    thumb.className='item-thumb';
+    if(item.stream_icon||item.cover){
+      const img=document.createElement('img');
+      img.src=item.stream_icon||item.cover;
+      img.onerror=()=>{thumb.textContent=type==='live'?'📡':type==='vod'?'🎬':'📺';img.remove();};
+      thumb.appendChild(img);
+    }else{thumb.textContent=type==='live'?'📡':type==='vod'?'🎬':'📺';}
+    const info=document.createElement('div');info.className='item-info';
+    const sub=item.category_name||item.genre||item.rating||'';
+    info.innerHTML=`<div class="item-name">${name}</div><div class="item-sub">${sub}</div>`;
+    const badge=document.createElement('div');
+    badge.className='badge'+(type==='live'?' live':'');
+    badge.textContent=type==='live'?'LIVE':type==='vod'?'VOD':'SERIES';
+    row.appendChild(thumb);row.appendChild(info);row.appendChild(badge);
+    row.addEventListener('click',()=>playItem(item,type,name));
+    list.appendChild(row);
+  });
+  const f=getFocusables(S('browse'));
+  if(f.length)f[0].focus();
+}
+
+function playItem(item,type,name){
+  let url='';
+  if(type==='live'){
+    url=`${state.server}/live/${state.user}/${state.pass}/${item.stream_id}.m3u8`;
+  }else if(type==='vod'){
+    const ext=item.container_extension||'mp4';
+    url=`${state.server}/movie/${state.user}/${state.pass}/${item.stream_id}.${ext}`;
+  }else{
+    // series — just show info for now
+    S('browse-title').textContent=name;
+    return;
+  }
+  state.currentItem={url,name,type};
+  S('player-title').textContent=name;
+  S('player-sub').textContent=type.toUpperCase()+' · '+state.user;
+  const vid=S('video-el');
+  vid.src=url;
+  vid.play().catch(()=>{});
+  show('player');
+}
+
+function stopPlayer(){
+  const vid=S('video-el');
+  vid.pause();vid.src='';
+}
+
+S('ctrl-play').addEventListener('click',()=>{
+  const vid=S('video-el');
+  if(vid.paused){vid.play();S('ctrl-play').textContent='⏸ pause';}
+  else{vid.pause();S('ctrl-play').textContent='▶ play';}
+});
+S('ctrl-back').addEventListener('click',()=>{S('video-el').currentTime=0;});
+S('ctrl-stop').addEventListener('click',()=>{stopPlayer();show('browse');});
+S('player-back').addEventListener('click',()=>{stopPlayer();show('browse');});
+
+// SEARCH
+function openSearch(){
+  state.searchQ='';
+  S('search-query').textContent='_';
+  S('search-results').innerHTML='';
+  buildAlpha();
+  show('search-screen');
+}
+function buildAlpha(){
+  const g=S('alpha-grid');g.innerHTML='';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789⌫✓'.split('').forEach((k,i)=>{
+    const b=document.createElement('button');
+    b.className='alpha-key F';b.tabIndex=200+i;b.textContent=k;
+    b.addEventListener('click',()=>{
+      if(k==='⌫')state.searchQ=state.searchQ.slice(0,-1);
+      else if(k==='✓')doSearch();
+      else state.searchQ+=k;
+      S('search-query').textContent=(state.searchQ||'')+'_';
+    });
+    g.appendChild(b);
+  });
+}
+async function doSearch(){
+  if(!state.searchQ)return;
+  const res=S('search-results');
+  res.innerHTML='<div class="loading"><div class="spinner"></div> searching...</div>';
+  try{
+    const q=state.searchQ.toLowerCase();
+    const r=await fetch(`${state.server}/player_api.php?username=${state.user}&password=${state.pass}&action=get_vod_streams`);
+    const vod=await r.json();
+    const r2=await fetch(`${state.server}/player_api.php?username=${state.user}&password=${state.pass}&action=get_live_streams`);
+    const live=await r2.json();
+    const all=[...vod,...live].filter(i=>(i.name||i.title||'').toLowerCase().includes(q)).slice(0,50);
+    renderItems(all,res,'vod');
+  }catch(e){res.innerHTML='<div class="empty">search error</div>';}
+}
+
+S('browse-back').addEventListener('click',()=>show('home'));
+S('search-back').addEventListener('click',()=>show('home'));
+S('tab-home').addEventListener('click',()=>show('home'));
+S('tab-search').addEventListener('click',()=>openSearch());
+S('tab-logout').addEventListener('click',()=>{
+  localStorage.removeItem('apollo_auth');
+  state={server:'',user:'',pass:'',categories:{},currentCat:null,allItems:[],searchQ:'',currentItem:null};
+  show('login');
+});
+
+// AUTO LOGIN
+try{
+  const s=localStorage.getItem('apollo_auth');
+  if(s){
+    const d=JSON.parse(s);
+    S('f-server').value=d.server;S('f-user').value=d.user;S('f-pass').value=d.pass;
+    state.server=d.server;state.user=d.user;state.pass=d.pass;
+    fetch(`${d.server}/player_api.php?username=${d.user}&password=${d.pass}&action=get_live_categories`)
+      .then(r=>r.json()).then(cats=>loadHome(cats)).catch(()=>{});
+  }
+}catch(e){}
+</script>
+</body>
+</html>
