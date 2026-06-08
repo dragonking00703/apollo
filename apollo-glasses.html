@@ -10,12 +10,9 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0a0a0f;--s1:#12121a;--s2:#1a1a26;--acc:#ff6b35;--text:#f0efe8;--muted:#666677;--border:#22222e;--r:10px}
 html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;margin:0}
-
-/* GLASSES MODE */
 #glasses-app{width:600px;height:600px;overflow:hidden;position:relative;display:none}
 .screen{position:absolute;inset:0;display:none;flex-direction:column;padding:18px}
 .screen.active{display:flex}
-
 #login{align-items:center;justify-content:center;gap:14px;text-align:center}
 .logo{font-size:34px;font-weight:700;letter-spacing:-2px}
 .logo .a{color:var(--acc)}.logo .b{color:var(--text)}
@@ -23,14 +20,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;m
 .pair-box{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%}
 .pair-label{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:8px}
 .pair-code{font-size:52px;font-weight:700;letter-spacing:14px;color:var(--acc);font-family:'JetBrains Mono',monospace}
-.pair-url{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:10px;word-break:break-all;line-height:1.5}
-.pair-url span{color:var(--text);font-weight:600}
+.pair-url{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:10px;word-break:break-all;line-height:1.6}
+.pair-url b{color:var(--text)}
 .spinner-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
 .spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .pair-status{font-size:12px;font-family:'JetBrains Mono',monospace;margin-top:8px;color:var(--muted)}
 .pair-status.ok{color:#4caf50}
-
 .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
 .topbar-title{font-size:16px;font-weight:700;color:var(--acc)}
 .back-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer}
@@ -69,8 +65,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;m
 .ctrl-btn:focus{outline:none;border-color:var(--acc)}
 .loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;gap:8px;font-family:'JetBrains Mono',monospace}
 .empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace}
-
-/* PHONE MODE */
 #phone-app{display:none;min-height:100vh;background:#0a0a0f;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:30px 20px}
 #phone-app.show{display:flex}
 .ph-logo{font-size:26px;font-weight:700;color:#ff6b35;letter-spacing:-1px}
@@ -80,23 +74,21 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;m
 .ph-field label{font-size:11px;color:#666677;letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
 .ph-field input{background:#1a1a26;border:1px solid #22222e;border-radius:10px;padding:13px 14px;color:#f0efe8;font-size:16px;outline:none;font-family:'Syne',sans-serif;width:100%}
 .ph-field input:focus{border-color:#ff6b35}
-.ph-btn{padding:14px;background:#ff6b35;color:#fff;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;cursor:pointer;width:100%;letter-spacing:1px}
+.ph-btn{padding:14px;background:#ff6b35;color:#fff;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px;cursor:pointer;width:100%}
 .ph-btn:disabled{opacity:0.5}
 .ph-msg{font-size:13px;text-align:center;min-height:20px;font-family:'JetBrains Mono',monospace}
 .ph-msg.ok{color:#4caf50}.ph-msg.err{color:#ff6b6b}
 </style>
 </head>
 <body>
-
-<!-- GLASSES APP -->
 <div id="glasses-app">
   <div id="login" class="screen active">
     <div class="logo"><span class="a">AP</span><span class="b">OLLO</span></div>
     <div class="logo-sub">IPTV · GLASSES</div>
     <div class="pair-box">
       <div class="pair-label">open on your phone to login</div>
-      <div class="pair-code" id="pair-code">····</div>
-      <div class="pair-url">go to <span>dragonking00703.github.io/apollo/<br>apollo-glasses.html?phone=<span id="code-inline">····</span></span></div>
+      <div class="pair-code" id="pair-code">----</div>
+      <div class="pair-url" id="pair-url">loading...</div>
       <div class="spinner-row"><div class="spinner"></div></div>
       <div class="pair-status" id="pair-status">waiting for phone...</div>
     </div>
@@ -143,14 +135,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;m
   </div>
 </div>
 
-<!-- PHONE APP -->
 <div id="phone-app">
   <div class="ph-logo">APOLLO · PAIR</div>
-  <div class="ph-sub">type your credentials on your phone<br>they'll appear on your glasses automatically</div>
+  <div class="ph-sub">enter credentials on your phone<br>they'll send to your glasses automatically</div>
   <div class="ph-card">
     <div class="ph-field">
       <label>pairing code (from glasses)</label>
-      <input type="text" id="ph-code" maxlength="4" inputmode="numeric" placeholder="e.g. 5823">
+      <input type="text" id="ph-code" maxlength="4" inputmode="numeric" placeholder="4-digit code">
     </div>
     <div class="ph-field">
       <label>server</label>
@@ -170,108 +161,79 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;m
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────
-// Free JSONBin.io relay — stores creds by code for 10 minutes
-const JSONBIN_KEY='$2a$10$placeholder'; // will use public bin
-const RELAY='https://api.jsonbin.io/v3/b';
-const MASTER_KEY='$2a$10$8XvpQ2kLmNpR3sT4uV5wX.placeholder'; // replaced below
+// State defined first before anything else
+var G = {server:'',user:'',pass:'',pairCode:'',poll:null,searchQ:''};
 
-// We use a simple public Cloudflare Worker as relay instead
-// since JSONBin needs API keys. Using a free pastebin-style approach:
-const RELAY_BASE='https://relay.dragonking00703.workers.dev';
+var KVDB = 'https://kvdb.io/9uqkMFgS3JZXSBi4bfPBvH/';
 
-// ── DETECT MODE ─────────────────────────────────────────
-const params=new URLSearchParams(window.location.search);
-const isPhone=params.has('phone');
-
-if(isPhone){
-  document.getElementById('phone-app').classList.add('show');
-  initPhone(params.get('phone'));
-}else{
-  document.getElementById('glasses-app').style.display='block';
-  initGlasses();
-}
-
-// ── SHARED STATE ─────────────────────────────────────────
-const S=id=>document.getElementById(id);
-let G={server:'',user:'',pass:'',pairCode:'',poll:null,searchQ:''};
-
-// ── FOCUS NAV ────────────────────────────────────────────
-function ff(c){return Array.from((c||document.querySelector('.screen.active')).querySelectorAll('.F'))}
-function mf(d){const f=ff();if(!f.length)return;const i=f.indexOf(document.activeElement);const n=d<0?(i>0?i-1:f.length-1):(i<f.length-1?i+1:0);f[n].focus();f[n].scrollIntoView({block:'nearest',behavior:'smooth'});}
-document.addEventListener('keydown',e=>{
-  if(document.activeElement.tagName==='INPUT')return;
-  if(e.key==='ArrowUp'||e.key==='ArrowLeft')mf(-1);
-  else if(e.key==='ArrowDown'||e.key==='ArrowRight')mf(1);
-  else if(e.key==='Enter'&&document.activeElement.classList.contains('F'))document.activeElement.click();
-  else if(e.key==='Escape')handleBack();
-  else return;
-  e.preventDefault();
-});
-
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  S(id).classList.add('active');
-  const f=ff(S(id));if(f.length)setTimeout(()=>f[0].focus(),50);
-}
-function handleBack(){
-  const a=document.querySelector('.screen.active');
-  if(!a)return;
-  if(a.id==='browse')show('home');
-  else if(a.id==='search-screen')show('home');
-  else if(a.id==='player'){stopPlayer();show('browse');}
-}
-
-// ── RELAY HELPERS (using jsonbin public API) ─────────────
-// We'll use a free no-auth approach: store in a public jsonbin
-// Each pair code creates a temp entry, glasses polls it
+function S(id){return document.getElementById(id);}
 
 async function relayWrite(code, data){
-  // Using a free CORS-enabled KV store: kvdb.io (free, no auth needed)
-  const r=await fetch(`https://kvdb.io/9uqkMFgS3JZXSBi4bfPBvH/${code}`,{
-    method:'PUT',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(data)
-  });
-  return r.ok;
+  try{
+    var r = await fetch(KVDB+code,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    return r.ok;
+  }catch(e){return false;}
 }
 
 async function relayRead(code){
   try{
-    const r=await fetch(`https://kvdb.io/9uqkMFgS3JZXSBi4bfPBvH/${code}`);
+    var r = await fetch(KVDB+code);
     if(!r.ok)return null;
-    const text=await r.text();
+    var text = await r.text();
     if(!text||text==='null'||text==='')return null;
     return JSON.parse(text);
   }catch(e){return null;}
 }
 
 async function relayDelete(code){
-  try{await fetch(`https://kvdb.io/9uqkMFgS3JZXSBi4bfPBvH/${code}`,{method:'DELETE'});}catch(e){}
+  try{await fetch(KVDB+code,{method:'DELETE'});}catch(e){}
 }
 
-// ── GLASSES MODE ─────────────────────────────────────────
+// Detect phone vs glasses mode
+var params = new URLSearchParams(window.location.search);
+var isPhone = params.has('phone');
+
+if(isPhone){
+  S('phone-app').classList.add('show');
+  var codeFromUrl = params.get('phone');
+  if(codeFromUrl) S('ph-code').value = codeFromUrl;
+  S('ph-send').addEventListener('click', async function(){
+    var code = S('ph-code').value.trim();
+    var server = S('ph-server').value.trim().replace(/\/$/,'');
+    var user = S('ph-user').value.trim();
+    var pass = S('ph-pass').value.trim();
+    if(!code||!server||!user||!pass){S('ph-msg').className='ph-msg err';S('ph-msg').textContent='fill all fields';return;}
+    S('ph-send').disabled=true;S('ph-send').textContent='SENDING...';
+    var ok = await relayWrite(code,{server:server,user:user,pass:pass});
+    if(ok){S('ph-msg').className='ph-msg ok';S('ph-msg').textContent='✓ sent! glasses will log in now';S('ph-send').textContent='SENT ✓';}
+    else{S('ph-msg').className='ph-msg err';S('ph-msg').textContent='failed — try again';S('ph-send').disabled=false;S('ph-send').textContent='SEND TO GLASSES';}
+  });
+} else {
+  S('glasses-app').style.display='block';
+  initGlasses();
+}
+
 function initGlasses(){
   // Check saved auth
   try{
-    const saved=localStorage.getItem('apollo_auth');
-    if(saved){const d=JSON.parse(saved);G.server=d.server;G.user=d.user;G.pass=d.pass;loadHome();return;}
+    var saved = localStorage.getItem('apollo_auth');
+    if(saved){var d=JSON.parse(saved);G.server=d.server;G.user=d.user;G.pass=d.pass;loadHome();return;}
   }catch(e){}
 
-  // Generate pair code
-  G.pairCode=String(Math.floor(1000+Math.random()*9000));
-  S('pair-code').textContent=G.pairCode;
-  S('code-inline').textContent=G.pairCode;
-  S('pair-status').textContent='waiting for phone...';
+  // Generate code
+  G.pairCode = String(Math.floor(1000+Math.random()*9000));
+  S('pair-code').textContent = G.pairCode;
+  var base = window.location.href.split('?')[0];
+  S('pair-url').innerHTML = 'go to <b>'+base+'?phone='+G.pairCode+'</b> on your phone';
 
-  // Poll relay every 2s
-  G.poll=setInterval(async()=>{
-    const data=await relayRead(G.pairCode);
+  // Poll
+  G.poll = setInterval(async function(){
+    var data = await relayRead(G.pairCode);
     if(data&&data.server&&data.user&&data.pass){
       clearInterval(G.poll);
       await relayDelete(G.pairCode);
       S('pair-status').className='pair-status ok';
-      S('pair-status').textContent='phone connected! logging in...';
+      S('pair-status').textContent='connected! logging in...';
       G.server=data.server;G.user=data.user;G.pass=data.pass;
       localStorage.setItem('apollo_auth',JSON.stringify({server:G.server,user:G.user,pass:G.pass}));
       setTimeout(loadHome,800);
@@ -279,27 +241,51 @@ function initGlasses(){
   },2000);
 }
 
-async function loadHome(){
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  S(id).classList.add('active');
+  var f=ff(S(id));if(f.length)setTimeout(function(){f[0].focus();},50);
+}
+
+function ff(c){return Array.from((c||document.querySelector('.screen.active')).querySelectorAll('.F'));}
+function mf(d){var f=ff();if(!f.length)return;var i=f.indexOf(document.activeElement);var n=d<0?(i>0?i-1:f.length-1):(i<f.length-1?i+1:0);f[n].focus();f[n].scrollIntoView({block:'nearest',behavior:'smooth'});}
+
+document.addEventListener('keydown',function(e){
+  if(document.activeElement.tagName==='INPUT')return;
+  if(e.key==='ArrowUp'||e.key==='ArrowLeft'){mf(-1);e.preventDefault();}
+  else if(e.key==='ArrowDown'||e.key==='ArrowRight'){mf(1);e.preventDefault();}
+  else if(e.key==='Enter'&&document.activeElement.classList.contains('F')){document.activeElement.click();e.preventDefault();}
+  else if(e.key==='Escape'){handleBack();e.preventDefault();}
+});
+
+function handleBack(){
+  var a=document.querySelector('.screen.active');
+  if(!a)return;
+  if(a.id==='browse')show('home');
+  else if(a.id==='search-screen')show('home');
+  else if(a.id==='player'){stopPlayer();show('browse');}
+}
+
+function loadHome(){
   S('home-info').textContent=G.user;
   show('home');
-  const grid=S('cat-grid');grid.innerHTML='';
+  var grid=S('cat-grid');grid.innerHTML='';
   [{name:'Live TV',icon:'📡',fn:loadLive},{name:'Movies',icon:'🎬',fn:loadVOD},{name:'TV Series',icon:'📺',fn:loadSeries},{name:'Search',icon:'🔍',fn:openSearch}]
-  .forEach((s,i)=>{
-    const c=document.createElement('button');
-    c.className='cat-card F';c.tabIndex=10+i;
-    c.innerHTML=`<div class="cat-icon">${s.icon}</div><div class="cat-name">${s.name}</div><div class="cat-count">tap to browse</div>`;
+  .forEach(function(s,i){
+    var c=document.createElement('button');c.className='cat-card F';c.tabIndex=10+i;
+    c.innerHTML='<div class="cat-icon">'+s.icon+'</div><div class="cat-name">'+s.name+'</div><div class="cat-count">tap to browse</div>';
     c.addEventListener('click',s.fn);grid.appendChild(c);
   });
 }
 
 async function loadStreams(action,title,type){
   S('browse-title').textContent=title;show('browse');
-  const list=S('item-list');
+  var list=S('item-list');
   list.innerHTML='<div class="loading"><div class="spinner"></div> loading...</div>';
   try{
-    const r=await fetch(`${G.server}/player_api.php?username=${G.user}&password=${G.pass}&action=${action}`);
+    var r=await fetch(G.server+'/player_api.php?username='+G.user+'&password='+G.pass+'&action='+action);
     renderItems(await r.json(),list,type);
-  }catch(e){list.innerHTML='<div class="empty">error — check connection</div>';}
+  }catch(e){list.innerHTML='<div class="empty">error loading</div>';}
 }
 function loadLive(){loadStreams('get_live_streams','LIVE TV','live');}
 function loadVOD(){loadStreams('get_vod_streams','MOVIES','vod');}
@@ -308,41 +294,41 @@ function loadSeries(){loadStreams('get_series','TV SERIES','series');}
 function renderItems(items,list,type){
   list.innerHTML='';
   if(!items||!items.length){list.innerHTML='<div class="empty">nothing found</div>';return;}
-  items.slice(0,200).forEach((item,i)=>{
-    const row=document.createElement('button');row.className='item-row F';row.tabIndex=100+i;
-    const name=item.name||item.title||'Unknown';
-    const thumb=document.createElement('div');thumb.className='item-thumb';
-    const src=item.stream_icon||item.cover||item.cover_big;
-    if(src){const img=document.createElement('img');img.src=src;img.onerror=()=>{thumb.textContent=type==='live'?'📡':type==='vod'?'🎬':'📺';img.remove();};thumb.appendChild(img);}
+  items.slice(0,200).forEach(function(item,i){
+    var row=document.createElement('button');row.className='item-row F';row.tabIndex=100+i;
+    var name=item.name||item.title||'Unknown';
+    var thumb=document.createElement('div');thumb.className='item-thumb';
+    var src=item.stream_icon||item.cover||item.cover_big;
+    if(src){var img=document.createElement('img');img.src=src;img.onerror=function(){thumb.textContent=type==='live'?'📡':type==='vod'?'🎬':'📺';img.remove();};thumb.appendChild(img);}
     else thumb.textContent=type==='live'?'📡':type==='vod'?'🎬':'📺';
-    const info=document.createElement('div');info.className='item-info';
-    info.innerHTML=`<div class="item-name">${name}</div><div class="item-sub">${item.category_name||item.genre||item.rating||''}</div>`;
-    const badge=document.createElement('div');badge.className='badge'+(type==='live'?' live':'');badge.textContent=type==='live'?'LIVE':type==='vod'?'VOD':'SERIES';
+    var info=document.createElement('div');info.className='item-info';
+    info.innerHTML='<div class="item-name">'+name+'</div><div class="item-sub">'+(item.category_name||item.genre||item.rating||'')+'</div>';
+    var badge=document.createElement('div');badge.className='badge'+(type==='live'?' live':'');badge.textContent=type==='live'?'LIVE':type==='vod'?'VOD':'SERIES';
     row.appendChild(thumb);row.appendChild(info);row.appendChild(badge);
-    row.addEventListener('click',()=>playItem(item,type,name));
+    row.addEventListener('click',function(){playItem(item,type,name);});
     list.appendChild(row);
   });
 }
 
 function playItem(item,type,name){
   if(type==='series')return;
-  const url=type==='live'
-    ?`${G.server}/live/${G.user}/${G.pass}/${item.stream_id}.m3u8`
-    :`${G.server}/movie/${G.user}/${G.pass}/${item.stream_id}.${item.container_extension||'mp4'}`;
+  var url=type==='live'
+    ?G.server+'/live/'+G.user+'/'+G.pass+'/'+item.stream_id+'.m3u8'
+    :G.server+'/movie/'+G.user+'/'+G.pass+'/'+item.stream_id+'.'+(item.container_extension||'mp4');
   S('player-title').textContent=name;S('player-sub').textContent=type.toUpperCase();
-  const vid=S('video-el');vid.src=url;vid.play().catch(()=>{});show('player');
+  var vid=S('video-el');vid.src=url;vid.play().catch(function(){});show('player');
 }
-function stopPlayer(){const v=S('video-el');v.pause();v.src='';}
+function stopPlayer(){var v=S('video-el');v.pause();v.src='';}
 
-S('ctrl-play').addEventListener('click',()=>{const v=S('video-el');if(v.paused){v.play();S('ctrl-play').textContent='⏸ pause';}else{v.pause();S('ctrl-play').textContent='▶ play';}});
-S('ctrl-back').addEventListener('click',()=>{S('video-el').currentTime=0;});
-S('ctrl-stop').addEventListener('click',()=>{stopPlayer();show('browse');});
-S('player-back').addEventListener('click',()=>{stopPlayer();show('browse');});
-S('browse-back').addEventListener('click',()=>show('home'));
-S('search-back').addEventListener('click',()=>show('home'));
-S('tab-home').addEventListener('click',()=>show('home'));
-S('tab-search').addEventListener('click',()=>openSearch());
-S('tab-logout').addEventListener('click',()=>{
+S('ctrl-play').addEventListener('click',function(){var v=S('video-el');if(v.paused){v.play();S('ctrl-play').textContent='⏸ pause';}else{v.pause();S('ctrl-play').textContent='▶ play';}});
+S('ctrl-back').addEventListener('click',function(){S('video-el').currentTime=0;});
+S('ctrl-stop').addEventListener('click',function(){stopPlayer();show('browse');});
+S('player-back').addEventListener('click',function(){stopPlayer();show('browse');});
+S('browse-back').addEventListener('click',function(){show('home');});
+S('search-back').addEventListener('click',function(){show('home');});
+S('tab-home').addEventListener('click',function(){show('home');});
+S('tab-search').addEventListener('click',function(){openSearch();});
+S('tab-logout').addEventListener('click',function(){
   localStorage.removeItem('apollo_auth');
   G={server:'',user:'',pass:'',pairCode:'',poll:null,searchQ:''};
   initGlasses();show('login');
@@ -350,10 +336,10 @@ S('tab-logout').addEventListener('click',()=>{
 
 function openSearch(){G.searchQ='';S('search-query').textContent='_';S('search-results').innerHTML='';buildAlpha();show('search-screen');}
 function buildAlpha(){
-  const g=S('alpha-grid');g.innerHTML='';
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789⌫✓'.split('').forEach((k,i)=>{
-    const b=document.createElement('button');b.className='alpha-key F';b.tabIndex=200+i;b.textContent=k;
-    b.addEventListener('click',()=>{
+  var g=S('alpha-grid');g.innerHTML='';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789⌫✓'.split('').forEach(function(k,i){
+    var b=document.createElement('button');b.className='alpha-key F';b.tabIndex=200+i;b.textContent=k;
+    b.addEventListener('click',function(){
       if(k==='⌫')G.searchQ=(G.searchQ||'').slice(0,-1);
       else if(k==='✓')doSearch();
       else G.searchQ=(G.searchQ||'')+k;
@@ -363,39 +349,16 @@ function buildAlpha(){
 }
 async function doSearch(){
   if(!G.searchQ)return;
-  const res=S('search-results');
+  var res=S('search-results');
   res.innerHTML='<div class="loading"><div class="spinner"></div> searching...</div>';
   try{
-    const q=G.searchQ.toLowerCase();
-    const [v,l]=await Promise.all([
-      fetch(`${G.server}/player_api.php?username=${G.user}&password=${G.pass}&action=get_vod_streams`).then(r=>r.json()),
-      fetch(`${G.server}/player_api.php?username=${G.user}&password=${G.pass}&action=get_live_streams`).then(r=>r.json())
-    ]);
-    renderItems([...v,...l].filter(i=>(i.name||'').toLowerCase().includes(q)).slice(0,50),res,'vod');
+    var q=G.searchQ.toLowerCase();
+    var r1=await fetch(G.server+'/player_api.php?username='+G.user+'&password='+G.pass+'&action=get_vod_streams');
+    var v=await r1.json();
+    var r2=await fetch(G.server+'/player_api.php?username='+G.user+'&password='+G.pass+'&action=get_live_streams');
+    var l=await r2.json();
+    renderItems([...v,...l].filter(function(i){return(i.name||'').toLowerCase().includes(q);}).slice(0,50),res,'vod');
   }catch(e){res.innerHTML='<div class="empty">search error</div>';}
-}
-
-// ── PHONE MODE ───────────────────────────────────────────
-function initPhone(codeFromUrl){
-  if(codeFromUrl)S('ph-code').value=codeFromUrl;
-  S('ph-send').addEventListener('click',async()=>{
-    const code=S('ph-code').value.trim();
-    const server=S('ph-server').value.trim().replace(/\/$/,'');
-    const user=S('ph-user').value.trim();
-    const pass=S('ph-pass').value.trim();
-    if(!code||!server||!user||!pass){S('ph-msg').className='ph-msg err';S('ph-msg').textContent='fill all fields';return;}
-    S('ph-send').disabled=true;S('ph-send').textContent='SENDING...';
-    const ok=await relayWrite(code,{server,user,pass});
-    if(ok){
-      S('ph-msg').className='ph-msg ok';
-      S('ph-msg').textContent='✓ sent! your glasses will log in now';
-      S('ph-send').textContent='SENT ✓';
-    }else{
-      S('ph-msg').className='ph-msg err';
-      S('ph-msg').textContent='failed — try again';
-      S('ph-send').disabled=false;S('ph-send').textContent='SEND TO GLASSES';
-    }
-  });
 }
 </script>
 </body>
